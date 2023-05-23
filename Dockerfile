@@ -1,4 +1,10 @@
-FROM ubuntu:latest
+FROM eclipse-temurin:18
 LABEL authors="Titan"
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /app
+COPY pom.xml .mvn/pom.xml
+RUN ./mvnw dependency:resolve
+copy src ./src
+
+CMD ["java "]
+
