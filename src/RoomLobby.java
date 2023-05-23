@@ -22,6 +22,7 @@ public class RoomLobby {
 
     private void onTextField(ActionEvent event){
         manager.sendMessage(event.getActionCommand());
+        messageinput.setText("");
     }
 
     public JPanel getContentPane() {

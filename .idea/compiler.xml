@@ -9,5 +9,8 @@
         <module name="SpaceMultiplayer" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="core-java" target="19" />
+    </bytecodeTargetLevel>
   </component>
 </project>
