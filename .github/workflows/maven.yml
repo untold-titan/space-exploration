@@ -30,9 +30,11 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Build .jar with Maven
-      run: mvn clean package
+      run: | 
+        mvn clean package
+        mv /home/runner/work/space-exploration/space-exploration/target/core-java-1.0-SNAPSHOT-jar-with-dependencies.jar /space.zip
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v3.1.2
       with:
         name: space-exploration
-        path: /home/runner/work/space-exploration/space-exploration/target/core-java-1.0-SNAPSHOT-jar-with-dependencies.jar
+        path: /space.zip
