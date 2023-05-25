@@ -10,7 +10,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
         String address = "localhost";
         String username = "developer";
-        int port = 8014;
+        int port = 8021;
         if(args.length != 0){
             if(Objects.equals(args[0], "--server")){
                 //Start the server

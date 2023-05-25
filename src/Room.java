@@ -2,12 +2,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Room {
-    private ArrayList<Player> players = new ArrayList<>();
+
+    //This field is marked as protected so that its subclass, Game can access it.
+    protected ArrayList<Player> players = new ArrayList<>();
     private int maxPlayers = 4;
 
     Room(int maxPlayers){
         this.maxPlayers = maxPlayers;
     }
+
+    Room(){}
 
     public void addPlayer(Player player, boolean server){
         if(server){
@@ -56,5 +60,9 @@ public class Room {
 
     public boolean hasRoom(){
         return players.size() < maxPlayers;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 }

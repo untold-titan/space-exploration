@@ -7,6 +7,8 @@ public class WindowManager {
     private JFrame frame;
     private RoomLobby lobby;
 
+    private GamePage gamePage;
+
     private Client client;
     //0 -> Not Displaying
     //1 -> Lobby
@@ -16,16 +18,28 @@ public class WindowManager {
     WindowManager(Client client){
         this.client = client;
         currentWindow = 1;
+        frame = new JFrame();
+        frame.setTitle("Space Lobby");
         lobby = new RoomLobby(this);
-        frame = new JFrame("Lobby");
+        gamePage = new GamePage(this);
+    }
+
+    public void showLobby(){
         frame.setContentPane(lobby.getContentPane());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
 
-    public void initLobby(){
+    public void showGame(){
+        frame.setVisible(false);
+        frame.setContentPane(gamePage.getContent());
+        frame.pack();
+        frame.setVisible(true);
+    }
 
+    public void startGame(){
+        client.send("start-game:");
     }
 
     public void sendMessage(String s){

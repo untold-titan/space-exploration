@@ -11,6 +11,8 @@ public class Server extends WebSocketServer {
     ArrayList<Player> players = new ArrayList<>();
     ArrayList<Room> rooms = new ArrayList<>();
 
+    ArrayList<Game> games = new ArrayList<>();
+
     public Server(InetSocketAddress address){
         super(address);
     }
@@ -33,41 +35,58 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String s) {
+        Player sender = getPlayer(conn.getRemoteSocketAddress().toString());
         System.out.println("Message from Client: \n" + s);
         if(s.contains("set-user:")){
             String username = s.split(":")[1];
             username = username.replaceAll("([\\[\\]])","");
             players.add(new Player(username,conn.getRemoteSocketAddress().toString(),conn));
             System.out.println("Added new player: " + username);
+            return;
         }
         if(s.contains("join-room:")){
-            Player playerToMatchmake = getPlayer(conn.getRemoteSocketAddress().toString());
-            if(playerToMatchmake.getUsername() == null){
-                playerToMatchmake.sendMessage("error:no-username");
+            if(sender.getUsername() == null){
+                sender.sendMessage("error:no-username");
                 return;
             }
             if(rooms.isEmpty()){
                 rooms.add(new Room(4));
-                rooms.get(0).addPlayer(playerToMatchmake,true);
+                rooms.get(0).addPlayer(sender,true);
             }
             else{
                 for(Room room : rooms){
                     if(room.hasRoom()){
-                        room.addPlayer(playerToMatchmake,true);
+                        room.addPlayer(sender,true);
                         return;
                     }
                 }
                 rooms.add(new Room(4));
-                rooms.get(rooms.size() - 1).addPlayer(playerToMatchmake,true);
+                rooms.get(rooms.size() - 1).addPlayer(sender,true);
             }
+            return;
         }
         if(s.contains("message:")){
-            Player sender = getPlayer(conn.getRemoteSocketAddress().toString());
             Room room = getRoomOfPlayer(sender);
             String message = sender.getUsername() +
                     "-" +
                     s;
             room.broadcast(message);
+            return;
+        }
+        if(s.contains("start-game:")){
+            System.out.println("Initializing Game");
+            //TODO: Generate the map and sync it with clients
+            Room room = getRoomOfPlayer(sender);
+            rooms.remove(room);
+            room.broadcast("Server-message:Game is Loading!! Get Ready!");
+            Game newGame = new Game(room);
+            games.add(newGame);
+            return;
+        }
+        if(s.contains("loaded-map:")){
+            Game game = getGameOfPlayer(sender);
+            game.setLoadedStatus(sender);
+            game.tryStart();
         }
     }
 
@@ -99,6 +118,15 @@ public class Server extends WebSocketServer {
         for(Room room : rooms){
             if(room.hasPlayer(player)){
                 return room;
+            }
+        }
+        return null;
+    }
+
+    Game getGameOfPlayer(Player player){
+        for(Game game : games){
+            if(game.hasPlayer(player)){
+                return game;
             }
         }
         return null;

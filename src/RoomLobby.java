@@ -17,12 +17,18 @@ public class RoomLobby {
         messages.setLayout(new BoxLayout(messages,BoxLayout.Y_AXIS));
         messages.setBorder(new EmptyBorder(0,10,0,0));
         messageinput.addActionListener(this::onTextField);
+        startButton.addActionListener(this::onStartGameButtonPress);
         this.manager = manager;
     }
 
     private void onTextField(ActionEvent event){
         manager.sendMessage(event.getActionCommand());
         messageinput.setText("");
+    }
+
+    private void onStartGameButtonPress(ActionEvent event){
+        //TODO: Voting system
+        manager.startGame();
     }
 
     public JPanel getContentPane() {
