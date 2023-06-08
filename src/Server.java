@@ -87,6 +87,35 @@ public class Server extends WebSocketServer {
             Game game = getGameOfPlayer(sender);
             game.setLoadedStatus(sender);
             game.tryStart();
+            return;
+        }
+        if(s.contains("moved-to:")){
+            Game game = getGameOfPlayer(sender);
+            game.getPlayer(sender.getIpAddress()).setCurrentSystem(Integer.parseInt(s.split(":")[1]));
+            return;
+        }
+        if(s.contains("ransacked:")){
+            Game game = getGameOfPlayer(sender);
+            int systemId = Integer.parseInt(s.split(":")[1].split(",")[0]);
+            int planetId = Integer.parseInt(s.split(":")[1].split(",")[1]);
+            Planet planet = game.getPlanet(systemId,planetId);
+            planet.grabArtifact();
+            System.out.println("Player " + sender.getUsername() + " ransacked planet " + planet.getPlanetName());
+            game.broadcast("artifacts:" + systemId + "," + planetId);
+            return;
+        }
+        if(s.contains("looted:")){
+            Game game = getGameOfPlayer(sender);
+            String[] data = s.split(":")[1].split(",");
+            int systemId = Integer.parseInt(data[0]);
+            int planetId = Integer.parseInt(data[1]);
+            int units = Integer.parseInt(data[2]);
+            Planet planet = game.getPlanet(systemId,planetId);
+            planet.getUnits();
+            game.broadcast("units:" + systemId + "," + planetId);
+            game.getPlayer(sender.getIpAddress()).addUnits(units);
+            game.testForWin();
+            System.out.println("Player now has " + game.getPlayer(sender.getIpAddress()).getUnits() + " units");
         }
     }
 

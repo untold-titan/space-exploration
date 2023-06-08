@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 //I would name this System, but that is a really important class that is already used by Java
@@ -13,25 +12,29 @@ public class SolarSystem {
 
     // The ID makes it easier to tell the server what system the player wants to navigate with,
     // instead of matching the name. The ID will be unique to just the game instance.
-    private int id;
-    private String name;
-    private ArrayList<Planet> planets;
+    private final int id;
+    private final String name;
+    private final ArrayList<Planet> planets;
     private Race race;
-    private int economy; //1-5x the units found in this system
+    private final int economy; //1-5x the units found in this system
 
-    private int leftLink;
-    private int rightLink;
+    private final int leftLink;
+    private final int rightLink;
 
-    private ArrayList<Player> players = new ArrayList();
+    private int currentPlanet;
+    private int actions;
 
     SolarSystem(int id, int sizeOfGalaxy){
         this.id = id;
         this.name = generateSystemName();
         planets = new ArrayList<>();
         Random rand = new Random();
-        int planetsToMake = rand.nextInt(7) + 1;
-        for(int i = 0; i != planetsToMake;  i++){
-            this.planets.add(new Planet());
+
+        //Actions is equal to the number of planets in the system.
+        //Each player has a finite number of things they can do in a system.
+        actions = rand.nextInt(7) + 1;
+        for(int i = 0; i != actions;  i++){
+            this.planets.add(new Planet(i));
         }
         switch (rand.nextInt(3) + 1) {
             case 1 -> race = Race.VYKEEN;
@@ -44,7 +47,7 @@ public class SolarSystem {
     }
 
     SolarSystem(String data){
-        //0,VYKEEN,2~PLANETDATA-PLANETDATA2-PLANETDATA3
+        //0,System Name,VYKEEN,,leftlink,rightlink,2~PLANETDATA-PLANETDATA2-PLANETDATA3
         this.planets = new ArrayList<>();
         String[] systemData = data.split("~")[0].split(",");
         String[] planetData = data.split("~")[1].split("-");
@@ -61,6 +64,7 @@ public class SolarSystem {
         for(String planet : planetData){
             planets.add(new Planet(planet));
         }
+        actions = planets.size();
     }
 
     public String generateSystemName(){
@@ -73,26 +77,9 @@ public class SolarSystem {
             name.append(vowels.charAt(rand.nextInt(vowels.length()-1)));
         }
         name.append(" ");
-        name.append(rand.nextInt(6));
+        name.append(rand.nextInt(5) + 1);
         return name.toString();
     }
-
-    public void addPlayerToSystem(Player player){
-        players.add(player);
-    }
-
-    public void removePlayerFromSystem(Player playerToRemove){
-        Player removeMe = null;
-        for(Player player : players){
-            if(Objects.equals(player.getIpAddress(), playerToRemove.getIpAddress())){
-                removeMe = player;
-            }
-        }
-        if(removeMe != null){
-            players.remove(removeMe);
-        }
-    }
-
     @Override
     public String toString() {
         StringBuilder system = new StringBuilder();
@@ -114,5 +101,49 @@ public class SolarSystem {
         }
         system.deleteCharAt(system.length() - 1);
         return system.toString();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getLeftLink() {
+        return leftLink;
+    }
+
+    public int getRightLink() {
+        return rightLink;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ArrayList<Planet> getPlanets() {
+        return planets;
+    }
+
+    public void setCurrentPlanet(Planet planet) {
+        this.currentPlanet = planets.indexOf(planet);
+    }
+
+    public Planet getPlanet(int id){
+        return planets.get(id);
+    }
+
+    public int getEconomy() {
+        return economy;
+    }
+
+    public void useAction(){
+        this.actions -= 1;
+    }
+
+    public int getActionsLeft(){
+        return this.actions;
+    }
+
+    public Planet getCurrentPlanet() {
+        return planets.get(currentPlanet);
     }
 }

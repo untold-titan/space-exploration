@@ -10,7 +10,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
         String address = "localhost";
         String username = "developer";
-        int port = 8021;
+        int port = 8025;
         if(args.length != 0){
             if(Objects.equals(args[0], "--server")){
                 //Start the server
@@ -37,7 +37,6 @@ public class Main {
         //Start in regular mode, aka, just the game client
         System.out.println("Welcome to Space Expedition. Please connect to a server!");
         System.out.println("No servers were automatically detected, please enter the IP address and port of the server you want to connect to.");
-        boolean connected = false;
         System.out.println("Username:");
         username = input.nextLine();
         System.out.println("Address: ");

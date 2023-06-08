@@ -6,14 +6,15 @@ import java.net.URI;
 public class Client extends WebSocketClient {
 
     private Room room;
-    private String username;
+    private final String username;
     private WindowManager window;
     private Game game;
+
+    private Player player;
 
     Client(URI uri,String username){
         super(uri);
         this.username = username;
-
     }
 
     @Override
@@ -21,6 +22,7 @@ public class Client extends WebSocketClient {
         //Setting the player's username on the server.
         send("set-user:" + username);
         send("join-room:");
+        player = new Player(username);   
         window = new WindowManager(this);
         window.showLobby();
     }
@@ -44,18 +46,33 @@ public class Client extends WebSocketClient {
             return;
         }
         if(s.contains("galaxy:")){
-            //TODO: Load galaxy into the client/game
-            game = new Game(s.replaceAll("galaxy:",""));
+            game = new Game(s.replaceAll("galaxy:",""),window,this,player);
             send("loaded-map:");
             return;
         }
         if(s.contains("start:")){
-            //TODO: Start game!
-            window.showGame();
+            window.showGalacticMap();
+            window.showCoordinateWindow();
             return;
         }
         if(s.contains("start-location:")){
-
+            game.setCurrentLocation(Integer.parseInt(s.split(":")[1]));
+            return;
+        }
+        if(s.contains("artifacts:")){
+            int system = Integer.parseInt(s.split(":")[1].split(",")[0]);
+            int planet = Integer.parseInt(s.split(":")[1].split(",")[1]);
+            System.out.println(game.getPlanet(system,planet).getArtifacts());
+            game.getPlanet(system,planet).grabArtifact();
+            System.out.println(game.getPlanet(system,planet).getArtifacts());
+        }
+        if(s.contains("Error")){
+            window.panic(500);
+        }
+        if(s.contains("won:")){
+            window.close();
+            String winner = s.split(":")[1];
+            System.out.println("Game Ended! " + winner + " won!");
         }
     }
 
