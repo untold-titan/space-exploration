@@ -10,4 +10,4 @@ Download the latest release from the releases section on the right, and run it w
 You will require a server to be hosted for this to work, so either get the IP address and port of a pre-hosted one, or host your own with `java -jar space.jar --server`
 
 ## I wanna inspect the code! You didn't send me a .zip in the D2L dropbox!
-Yes i know, simply download the entire repository by clicking on the download as zip button in the corner.
+Yes i know, simply download the entire repository by clicking on the `Code<>` button, and then download as zip button in the corner.
