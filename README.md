@@ -11,3 +11,9 @@ You will require a server to be hosted for this to work, so either get the IP ad
 
 ## I wanna inspect the code! You didn't send me a .zip in the D2L dropbox!
 Yes i know, simply download the entire repository by clicking on the `Code<>` button, and then download as zip button in the corner.
+
+## Other Docs
+[Map Generation](docs/map.md)
+[Websocket Communication](docs/websockets.md)
+[Dev Log](docs/dev.md)
+[Reflection](doc/reflection.md)
