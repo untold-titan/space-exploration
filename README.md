@@ -14,6 +14,9 @@ Yes i know, simply download the entire repository by clicking on the `Code<>` bu
 
 ## Other Docs
 [Map Generation](docs/map.md)
+
 [Websocket Communication](docs/websockets.md)
+
 [Dev Log](docs/dev.md)
+
 [Reflection](doc/reflection.md)
