@@ -9,6 +9,13 @@ For a detailed explination on how each class works, please refer to [Code Docume
 Download the latest release from the releases section on the right, and run it with `java -jar space.jar`
 You will require a server to be hosted for this to work, so either get the IP address and port of a pre-hosted one, or host your own with `java -jar space.jar --server`
 
+### Local Testing (localhost)
+To host the server: `java -jar space.jar --dev`
+
+To run the client: `java -jar space.jar --dev-client`
+
+These commands will automatically connect the server to the client, and will work out of the box. 
+
 ## I wanna inspect the code! You didn't send me a .zip in the D2L dropbox!
 Yes i know, simply download the entire repository by clicking on the `Code<>` button, and then download as zip button in the corner.
 
